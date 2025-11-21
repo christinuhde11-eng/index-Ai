@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KISSKI Medical AI Platform - Final Prototype</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Design System - Colors (Medical Blue + Clinical Green) */
+        :root {
+            /* Primary Colors - Medical Blue */
+            --color-primary: #0369A1;
+            --color-primary-hover: #0284C7;
+            --color-primary-active: #0369A1;
+            --color-primary-light: rgba(3, 105, 161, 0.1);
+            
+            /* Secondary Colors - Clinical Green */
+            --color-secondary: #047857;
+            --color-secondary-hover: #059669;
+            --color-secondary-light: rgba(4, 120, 87, 0.1);
+            
+            /* Backgrounds */
+            --color-background: #F8FAFC;
+            --color-surface: #FFFFFF;
+            --color-surface-glass: rgba(255, 255, 255, 0.95);
+            
+            /* Text */
+            --color-text-primary: #0F172A;
+            --color-text-secondary: #64748B;
+            --color-text-muted: #94A3B8;
+            
+            /* Status Colors */
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-error: #EF4444;
+            --color-info: #3B82F6;
+            
+            /* Borders */
+            --color-border: #E2E8F0;
+            --color-border-focus: var(--color-primary);
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            
+            /* Focus Ring */
+            --focus-ring: 0 0 0 3px rgba(3, 105, 161, 0.2);
+            
+            /* Typography */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            
+            /* Spacing */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-12: 3rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-base: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            /* Transitions */
+            --transition-fast: 150ms ease-in-out;
+            --transition-normal: 250ms ease-in-out;
+            --transition-slow: 350ms ease-in-out;
+        }
+
+        
+
+        body {
+            font-family: var(--font-family);
+            background: var(--color-background);
+            color: var(--color-text-primary);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Effects */
+        .glass {
+            background: var(--color-surface-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        /* Layout Container */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Top Navigation - Glassmorphism */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--color-surface-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--color-border);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-6);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            font-weight: 700;
+            font-size: var(--font-size-lg);
+            color: var(--color-primary);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: var(--radius-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .nav-btn {
+            padding: var(--space-2) var(--space-4);
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        .nav-btn:hover {
+            background: var(--color-primary-light);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .nav-btn.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: white;
+        }
+
+        /* Sidebar - Glassmorphism */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            width: 240px;
+            height: calc(100vh - 60px);
+            background: var(--color-surface-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-right: 1px solid var(--color-border);
+            padding: var(--space-6) 0;
+            z-index: 999;
+            transition: all var(--transition-normal);
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-item {
+            position: relative;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-6);
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            transition: all var(--transition-fast);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-link:hover {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
+        }
+
+        .sidebar-link:focus {
+            outline: none;
+            box-shadow: inset var(--focus-ring);
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(90deg, var(--color-primary-light), transparent);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .sidebar-icon {
+            font-size: 18px;
+            width: 18px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 240px;
+            margin-top: 60px;
+            padding: var(--space-8);
+            width: calc(100% - 240px);
+            transition: all var(--transition-normal);
+        }
+
+        .sidebar.collapsed + .main-content {
+            margin-left: 70px;
+            width: calc(100% - 70px);
+        }
+
+        /* Screen System */
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .metrics-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-6);
+        }
+
+        /* Glass Cards */
+        .card {
+            background: var(--color-surface-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-glass);
+            transition: all var(--transition-normal);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(3, 105, 161, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+
+        .card-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .card-icon.heart {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+        }
+
+        .card-icon.pressure {
+            background: linear-gradient(135deg, var(--color-primary), #1E40AF);
+        }
+
+        .card-icon.temperature {
+            background: linear-gradient(135deg, var(--color-warning), #D97706);
+        }
+
+        .card-icon.ai {
+            background: linear-gradient(135deg, var(--color-secondary), #065F46);
+        }
+
+        /* Vital Signs */
+        .vital-value {
+            font-size: var(--font-size-3xl);
+            font-weight: 800;
+            margin: var(--space-2) 0;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .vital-trend {
+            font-size: var(--font-size-sm);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+        }
+
+        .trend-up {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--color-error);
+        }
+
+        .trend-down {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--color-success);
+        }
+
+        .trend-stable {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--color-info);
+        }
+
+        /* AI Recommendation Card */
+        .ai-card {
+            border: 2px solid var(--color-secondary);
+            background: linear-gradient(135deg, var(--color-surface-glass), rgba(4, 120, 87, 0.05));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-secondary), var(--color-primary));
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--color-border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin: var(--space-2) 0;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-secondary), var(--color-primary));
+            border-radius: var(--radius-sm);
+            width: 87%;
+            transition: width 1s ease-out;
+            position: relative;
+        }
+
+        .confidence-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .ai-action-btn {
+            background: var(--color-secondary);
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            transition: all var(--transition-fast);
+            margin-top: var(--space-4);
+        }
+
+        .ai-action-btn:hover {
+            background: var(--color-secondary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .ai-action-btn:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        /* Status Panel */
+        .status-panel {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            background: var(--color-surface);
+            border-radius: var(--radius-base);
+            border-left: 3px solid var(--color-border);
+            transition: all var(--transition-fast);
+        }
+
+        .status-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .status-item.success {
+            border-left-color: var(--color-success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .status-item.warning {
+            border-left-color: var(--color-warning);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .status-item.error {
+            border-left-color: var(--color-error);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.green { background: var(--color-success); }
+        .status-dot.yellow { background: var(--color-warning); }
+        .status-dot.red { background: var(--color-error); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-normal);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background: var(--color-surface);
+            border-radius: var(--radius-xl);
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.95) translateY(20px);
+            transition: transform var(--transition-normal);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            padding: var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: var(--space-6);
+            max-height: calc(90vh - 200px);
+            overflow-y: auto;
+        }
+
+        /* Decision Tree */
+        .decision-tree {
+            background: var(--color-background);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+
+        .tree-node {
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-base);
+            padding: var(--space-4);
+            margin-bottom: var(--space-4);
+            position: relative;
+            transition: all var(--transition-fast);
+        }
+
+        .tree-node:hover {
+            border-color: var(--color-primary);
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tree-node::after {
+            content: '↓';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--color-primary);
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .tree-node:last-child::after {
+            display: none;
+        }
+
+        .node-label {
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--space-2);
+        }
+
+        .node-content {
+            font-size: var(--font-size-base);
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+        .node-value {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            margin-left: var(--space-2);
+        }
+
+        /* Chat Interface */
+        .chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all var(--transition-fast);
+            z-index: 1500;
+        }
+
+        .chat-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .chat-button .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--color-error);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: var(--font-size-xs);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            height: 500px;
+            background: var(--color-surface);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1500;
+            border: 1px solid var(--color-border);
+        }
+
+        .chat-window.active {
+            display: flex;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            padding: var(--space-4);
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: var(--space-4);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .message {
+            max-width: 80%;
+            padding: var(--space-3);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-sm);
+            line-height: 1.4;
+        }
+
+        .message.ai {
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background: var(--color-primary);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .chat-input-container {
+            padding: var(--space-4);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .chat-input {
+            flex: 1;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--font-size-sm);
+            outline: none;
+            transition: border-color var(--transition-fast);
+        }
+
+        .chat-input:focus {
+            border-color: var(--color-primary);
+            box-shadow: var(--focus-ring);
+        }
+
+        .chat-send {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-base);
+            padding: var(--space-2) var(--space-4);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .chat-send:hover {
+            background: var(--color-primary-hover);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-section {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-window {
+                width: calc(100% - 20px);
+                left: 10px;
+                right: 10px;
+            }
+        }
+
+        /* Screen Specific Styles */
+        .screen-header {
+            margin-bottom: var(--space-6);
+        }
+
+        .screen-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .screen-description {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-base);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+        }
+
+        /* Chart Placeholder */
+        .chart-placeholder {
+            height: 200px;
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-base);
+            margin: var(--space-4) 0;
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus Management */
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* High Contrast Mode Support */
+        @media (prefers-contrast: high) {
+            :root {
+                --color-border: #000000;
+                --color-text-secondary: #000000;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav" role="navigation" aria-label="Hauptnavigation">
+        <div class="logo-section">
+            <div class="logo-icon" aria-hidden="true">🧠</div>
+            <span>KISSKI Medical AI</span>
+        </div>
+        
+        <div class="nav-actions">
+            <button class="nav-btn active" data-screen="dashboard" aria-label="Dashboard">
+                📊 Dashboard
+            </button>
+            <button class="nav-btn" data-screen="monitoring" aria-label="Live Monitoring">
+                📈 Monitoring
+            </button>
+            <button class="nav-btn" data-screen="ai-analysis" aria-label="KI Analyse">
+                🤖 KI-Analyse
+            </button>
+            <button class="nav-btn" data-screen="reports" aria-label="Berichte">
+                📋 Berichte
+            </button>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" role="navigation" aria-label="Seitennavigation">
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link active" data-screen="dashboard" role="button" tabindex="0">
+                    <span class="sidebar-icon" aria-hidden="true">🏠</span>
+                    <span>Übersicht</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link" data-screen="monitoring" role="button" tabindex="0">
+                    <span class="sidebar-icon" aria-hidden="true">💓</span>
+                    <span>Live-Monitoring</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link" data-screen="ai-analysis" role="button" tabindex="0">
+                    <span class="sidebar-icon" aria-hidden="true">🧠</span>
+                    <span>KI-Analysen</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link" data-screen="explanations" role="button" tabindex="0">
+                    <span class="sidebar-icon" aria-hidden="true">❓</span>
+                    <span>Erklärungen</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link" data-screen="history" role="button" tabindex="0">
+                    <span class="sidebar-icon" aria-hidden="true">📚</span>
+                    <span>Verlauf</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link" data-screen="reports" role="button" tabindex="0">
+                    <span class="sidebar-icon" aria-hidden="true">📋</span>
+                    <span>Berichte</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link" data-screen="settings" role="button" tabindex="0">
+                    <span class="sidebar-icon" aria-hidden="true">⚙️</span>
+                    <span>Einstellungen</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" role="main">
+        <!-- Dashboard Screen -->
+        <div class="screen active" id="dashboard">
+            <div class="screen-header">
+                <h1 class="screen-title">Medical AI Dashboard</h1>
+                <p class="screen-description">Übersicht über Vitalparameter und KI-Empfehlungen</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Metrics Section -->
+                <div class="metrics-section">
+                    <!-- Heart Rate Card -->
+                    <div class="card" role="region" aria-labelledby="heart-rate-title">
+                        <div class="card-header">
+                            <h2 class="card-title" id="heart-rate-title">Herzfrequenz</h2>
+                            <div class="card-icon heart" aria-hidden="true">💓</div>
+                        </div>
+                        <div class="vital-value">
+                            82 <span style="font-size: var(--font-size-base); color: var(--color-text-secondary);">bpm</span>
+                            <span class="vital-trend trend-up" role="status">+8%</span>
+                        </div>
+                        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-top: var(--space-2);">
+                            Baseline: 74 bpm | Letzter Check: 14:23
+                        </p>
+                    </div>
+
+                    <!-- Blood Pressure Card -->
+                    <div class="card" role="region" aria-labelledby="blood-pressure-title">
+                        <div class="card-header">
+                            <h2 class="card-title" id="blood-pressure-title">Blutdruck</h2>
+                            <div class="card-icon pressure" aria-hidden="true">🩺</div>
+                        </div>
+                        <div class="vital-value">
+                            128/82 <span style="font-size: var(--font-size-base); color: var(--color-text-secondary);">mmHg</span>
+                            <span class="vital-trend trend-stable" role="status">Stabil</span>
+                        </div>
+                        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-top: var(--space-2);">
+                            Normbereich | Letzter Check: 14:20
+                        </p>
+                    </div>
+
+                    <!-- Temperature Card -->
+                    <div class="card" role="region" aria-labelledby="temperature-title">
+                        <div class="card-header">
+                            <h2 class="card-title" id="temperature-title">Temperatur</h2>
+                            <div class="card-icon temperature" aria-hidden="true">🌡️</div>
+                        </div>
+                        <div class="vital-value">
+                            36.8 <span style="font-size: var(--font-size-base); color: var(--color-text-secondary);">°C</span>
+                            <span class="vital-trend trend-down" role="status">-0.2°C</span>
+                        </div>
+                        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-top: var(--space-2);">
+                            Normal | Letzter Check: 14:18
+                        </p>
+                    </div>
+
+                    <!-- AI Recommendation Card -->
+                    <div class="card ai-card" role="region" aria-labelledby="ai-recommendation-title">
+                        <div class="card-header">
+                            <h2 class="card-title" id="ai-recommendation-title">KI-Empfehlung</h2>
+                            <div class="card-icon ai" aria-hidden="true">🤖</div>
+                        </div>
+                        <p style="font-size: var(--font-size-base); margin: var(--space-2) 0; font-weight: 500;">
+                            <strong>Routine-Check empfohlen</strong>
+                        </p>
+                        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                            Erhöhte Herzfrequenz seit 48h. Überwachung der Vitalparameter angeraten.
+                        </p>
+                        
+                        <div style="margin: var(--space-4) 0;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                <span style="font-size: var(--font-size-sm); font-weight: 600;">Confidence Score</span>
+                                <span style="font-size: var(--font-size-sm); font-weight: 700; color: var(--color-secondary);">87%</span>
+                            </div>
+                            <div class="confidence-bar" role="progressbar" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100" aria-label="KI Confidence Score">
+                                <div class="confidence-fill"></div>
+                            </div>
+                        </div>
+                        
+                        <button class="ai-action-btn" onclick="openAIModal()" aria-describedby="ai-recommendation-title">
+                            Warum empfiehlt die KI das? 🧠
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Status Panel -->
+                <div class="status-panel">
+                    <div class="card" role="region" aria-labelledby="system-status-title">
+                        <h2 class="card-title" id="system-status-title">System Status</h2>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-4);">
+                            <div class="status-item success">
+                                <div class="status-dot green" aria-hidden="true"></div>
+                                <div>
+                                    <div style="font-weight: 600; font-size: var(--font-size-sm);">KI-Modell aktiv</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Letztes Update: 14:25</div>
+                                </div>
+                            </div>
+                            <div class="status-item success">
+                                <div class="status-dot green" aria-hidden="true"></div>
+                                <div>
+                                    <div style="font-weight: 600; font-size: var(--font-size-sm);">Datenverbindung</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Stabil • 98% Uptime</div>
+                                </div>
+                            </div>
+                            <div class="status-item warning">
+                                <div class="status-dot yellow" aria-hidden="true"></div>
+                                <div>
+                                    <div style="font-weight: 600; font-size: var(--font-size-sm);">Kalibrierung</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Empfohlen in 2h</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" role="region" aria-labelledby="alerts-title">
+                        <h2 class="card-title" id="alerts-title">Aktuelle Alerts</h2>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-4);">
+                            <div class="status-item warning">
+                                <span style="font-size: 16px;" aria-hidden="true">⚠️</span>
+                                <div>
+                                    <div style="font-weight: 600; font-size: var(--font-size-sm);">Herzfrequenz erhöht</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Seit 14:15 • Patient ID: 12847</div>
+                                </div>
+                            </div>
+                            <div class="status-item success">
+                                <span style="font-size: 16px;" aria-hidden="true">✅</span>
+                                <div>
+                                    <div style="font-weight: 600; font-size: var(--font-size-sm);">Medikation bestätigt</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">14:10 • Dr. Schmidt</div>
+                                </div>
+                            </div>
+                            <div class="status-item success">
+                                <span style="font-size: 16px;" aria-hidden="true">📋</span>
+                                <div>
+                                    <div style="font-weight: 600; font-size: var(--font-size-sm);">Check completed</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">13:45 • Routine</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other Screens -->
+        <div class="screen" id="monitoring">
+            <div class="screen-header">
+                <h1 class="screen-title">Live-Monitoring</h1>
+                <p class="screen-description">Echtzeitüberwachung der Vitalparameter</p>
+            </div>
+            <div class="data-grid">
+                <div class="card">
+                    <h2 class="card-title">EKG Monitor</h2>
+                    <div class="chart-placeholder">📈 EKG-Kurve Live-Stream</div>
+                    <p>Herzrhythmus: Sinusrhythmus, regelmäßig</p>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">SpO2 Sättigung</h2>
+                    <div class="vital-value" style="color: var(--color-success);">98%</div>
+                    <div class="chart-placeholder">📊 Sauerstoffsättigung Verlauf</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="ai-analysis">
+            <div class="screen-header">
+                <h1 class="screen-title">KI-Analysen</h1>
+                <p class="screen-description">Detaillierte Auswertungen und Vorhersagen</p>
+            </div>
+            <div class="data-grid">
+                <div class="card ai-card">
+                    <h2 class="card-title">Risiko-Assessment</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin: var(--space-4) 0;">
+                        <span>Kardiovaskuläres Risiko</span>
+                        <span style="font-size: var(--font-size-xl); font-weight: 700; color: var(--color-warning);">Niedrig</span>
+                    </div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: 78%; background: var(--color-warning);"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">Trend-Analyse</h2>
+                    <div class="chart-placeholder">📉 7-Tage Trend der Vitalparameter</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="explanations">
+            <div class="screen-header">
+                <h1 class="screen-title">KI-Erklärungen</h1>
+                <p class="screen-description">Transparenz-Center für alle KI-Entscheidungen</p>
+            </div>
+            <div class="data-grid">
+                <div class="card">
+                    <h2 class="card-title">Letzte Erklärungen</h2>
+                    <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                        <div class="status-item">
+                            <span aria-hidden="true">🧠</span>
+                            <div>
+                                <div style="font-weight: 600;">Routine-Check Empfehlung</div>
+                                <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">14:25 • Confidence: 87%</div>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <span aria-hidden="true">📊</span>
+                            <div>
+                                <div style="font-weight: 600;">Risiko-Bewertung</div>
+                                <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">13:15 • Confidence: 92%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="history">
+            <div class="screen-header">
+                <h1 class="screen-title">Verlaufsdaten</h1>
+                <p class="screen-description">Historische Trends und Entwicklungen</p>
+            </div>
+            <div class="data-grid">
+                <div class="card">
+                    <h2 class="card-title">Herzfrequenz-Trend</h2>
+                    <div class="chart-placeholder">📈 30-Tage Herzfrequenz Verlauf</div>
+                    <p>Durchschnitt: 74 bpm • Trend: Leicht steigend</p>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">Blutdruck-Historie</h2>
+                    <div class="chart-placeholder">📊 Blutdruckwerte letzte 4 Wochen</div>
+                    <p>Systolisch: 128 mmHg • Diastolisch: 82 mmHg</p>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">Temperatur-Verlauf</h2>
+                    <div class="chart-placeholder">🌡️ Körpertemperatur Monitoring</div>
+                    <p>Durchschnitt: 36.6°C • Stabil</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="reports">
+            <div class="screen-header">
+                <h1 class="screen-title">Berichte</h1>
+                <p class="screen-description">Exportierbare Zusammenfassungen und Analysen</p>
+            </div>
+            <div class="data-grid">
+                <div class="card">
+                    <h2 class="card-title">Tagesbericht</h2>
+                    <p>Zusammenfassung der heutigen Vitalparameter und KI-Empfehlungen</p>
+                    <button class="ai-action-btn" style="margin-top: var(--space-4);">📄 PDF erstellen</button>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">Wochenbericht</h2>
+                    <p>Trend-Analyse und Entwicklungen der letzten 7 Tage</p>
+                    <button class="ai-action-btn" style="margin-top: var(--space-4);">📊 Exportieren</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="settings">
+            <div class="screen-header">
+                <h1 class="screen-title">Einstellungen</h1>
+                <p class="screen-description">System-Konfiguration und Präferenzen</p>
+            </div>
+            <div class="data-grid">
+                <div class="card">
+                    <h2 class="card-title">KI-Einstellungen</h2>
+                    <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>KI-Empfehlungen aktiviert</span>
+                            <input type="checkbox" checked style="transform: scale(1.2);">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Auto-Alerts</span>
+                            <input type="checkbox" checked style="transform: scale(1.2);">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Confidence-Schwellwert</span>
+                            <input type="range" min="50" max="95" value="80" style="width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- AI Explanation Modal -->
+    <div class="modal-overlay" id="aiModal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">
+                    <span style="font-size: 24px;" aria-hidden="true">🧠</span>
+                    Warum empfiehlt die KI das?
+                </h2>
+                <button class="modal-close" onclick="closeAIModal()" aria-label="Modal schließen">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="decision-tree">
+                    <h3 style="margin-bottom: var(--space-4); color: var(--color-primary);">🔄 Entscheidungsprozess</h3>
+                    
+                    <div class="tree-node">
+                        <div class="node-label">1. Input-Daten</div>
+                        <div class="node-content">
+                            Patient zeigt erhöhte Herzfrequenz
+                            <span class="node-value">82 bpm</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tree-node">
+                        <div class="node-label">2. Kontext-Analyse</div>
+                        <div class="node-content">
+                            Vergleich mit historischen Baseline-Werten der letzten
+                            <span class="node-value">30 Tage</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tree-node">
+                        <div class="node-label">3. Mustererkennung</div>
+                        <div class="node-content">
+                            Abweichung von Normalwert um
+                            <span class="node-value">+14%</span>
+                            erkannt
+                        </div>
+                    </div>
+                    
+                    <div class="tree-node">
+                        <div class="node-label">4. Empfehlung</div>
+                        <div class="node-content">
+                            <strong>Routine-Check empfohlen</strong> zur Überwachung der Vitalparameter
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: var(--space-6);">
+                    <h3 style="margin-bottom: var(--space-4); color: var(--color-primary);">📊 Relevante Datenpunkte</h3>
+                    
+                    <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                        <div class="status-item" style="justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                <span style="font-size: 20px;" aria-hidden="true">💓</span>
+                                <div>
+                                    <div style="font-weight: 600;">Herzfrequenz</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Aktuell 82 bpm (Baseline: 72 bpm)</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 700; color: var(--color-primary);">92%</div>
+                                <div class="confidence-bar" style="width: 60px; height: 4px; margin-top: var(--space-1);">
+                                    <div class="confidence-fill" style="width: 92%; height: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="status-item" style="justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                <span style="font-size: 20px;" aria-hidden="true">📈</span>
+                                <div>
+                                    <div style="font-weight: 600;">Trend-Analyse</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Steigend seit 48 Stunden</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 700; color: var(--color-primary);">78%</div>
+                                <div class="confidence-bar" style="width: 60px; height: 4px; margin-top: var(--space-1);">
+                                    <div class="confidence-fill" style="width: 78%; height: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="status-item" style="justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                <span style="font-size: 20px;" aria-hidden="true">📊</span>
+                                <div>
+                                    <div style="font-weight: 600;">Historische Daten</div>
+                                    <div style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">30-Tage-Durchschnitt: 71.5 bpm</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 700; color: var(--color-primary);">65%</div>
+                                <div class="confidence-bar" style="width: 60px; height: 4px; margin-top: var(--space-1);">
+                                    <div class="confidence-fill" style="width: 65%; height: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: var(--color-warning); background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--color-warning); border-radius: var(--radius-base); padding: var(--space-4); margin-top: var(--space-6);">
+                    <div style="font-weight: 600; color: #92400E; margin-bottom: var(--space-2);">
+                        ⚠️ Hinweis zu Unsicherheiten
+                    </div>
+                    <div style="color: #92400E; font-size: var(--font-size-sm); line-height: 1.6;">
+                        Diese Empfehlung ersetzt keine ärztliche Diagnose. Bei akuten Beschwerden sollte umgehend medizinisches Fachpersonal konsultiert werden.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Interface -->
+    <button class="chat-button" onclick="toggleChat()" aria-label="Chat öffnen">
+        💬
+        <span class="badge">2</span>
+    </button>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <span>🤖 KISSKI Assistent</span>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message ai">
+                Hallo! Ich bin Ihr KI-Assistent. Wie kann ich Ihnen helfen?
+            </div>
+            <div class="message ai">
+                Sie können mich nach Erklärungen zu den Vitalparametern oder KI-Empfehlungen fragen.
+            </div>
+        </div>
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Nachricht eingeben..." aria-label="Chat-Nachricht">
+            <button class="chat-send" onclick="sendMessage()" aria-label="Nachricht senden">📤</button>
+        </div>
+    </div>
+
+    <script>
+        // Screen Management
+        function switchScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show selected screen
+            document.getElementById(screenId).classList.add('active');
+            
+            // Update navigation states
+            document.querySelectorAll('.nav-btn, .sidebar-link').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.querySelectorAll(`[data-screen="${screenId}"]`).forEach(btn => {
+                btn.classList.add('active');
+            });
+        }
+
+        // Navigation Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Top navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const screenId = btn.dataset.screen;
+                    switchScreen(screenId);
+                });
+            });
+            
+            // Sidebar navigation
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const screenId = link.dataset.screen;
+                    if (screenId) {
+                        switchScreen(screenId);
+                    }
+                });
+                
+                // Keyboard support
+                link.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const screenId = link.dataset.screen;
+                        if (screenId) {
+                            switchScreen(screenId);
+                        }
+                    }
+                });
+            });
+        });
+
+        // AI Modal Functions
+        function openAIModal() {
+            const modal = document.getElementById('aiModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Focus management
+            const closeButton = modal.querySelector('.modal-close');
+            closeButton.focus();
+        }
+
+        function closeAIModal() {
+            const modal = document.getElementById('aiModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Chat Functions
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.classList.toggle('active');
+            
+            if (chatWindow.classList.contains('active')) {
+                document.getElementById('chatInput').focus();
+                // Remove badge
+                const badge = document.querySelector('.chat-button .badge');
+                if (badge) badge.style.display = 'none';
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.textContent = message;
+            messagesContainer.appendChild(userMessage);
+            
+            // Clear input
+            input.value = '';
+            
+            // Simulate AI response
+            setTimeout(() => {
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'message ai';
+                
+                // Simple AI responses
+                const responses = [
+                    'Vielen Dank für Ihre Frage. Die erhöhte Herzfrequenz könnte auf verschiedene Faktoren zurückzuführen sein.',
+                    'Basierend auf den aktuellen Daten empfehle ich eine genauere Überwachung.',
+                    'Gerne erkläre ich Ihnen die KI-Entscheidung genauer. Klicken Sie auf "Warum empfiehlt die KI das?"',
+                    'Die Vitalparameter zeigen einen stabilen Zustand mit leichten Abweichungen.',
+                    'Für weitere Details können Sie das Monitoring-Dashboard verwenden.'
+                ];
+                
+                aiMessage.textContent = responses[Math.floor(Math.random() * responses.length)];
+                messagesContainer.appendChild(aiMessage);
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1000);
+            
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Keyboard Events
+        document.addEventListener('keydown', function(e) {
+            // ESC to close modal
+            if (e.key === 'Escape') {
+                closeAIModal();
+            }
+            
+            // Enter in chat input
+            if (e.key === 'Enter' && e.target.id === 'chatInput') {
+                sendMessage();
+            }
+        });
+
+        // Click outside to close modal
+        document.getElementById('aiModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAIModal();
+            }
+        });
+
+        // Accessibility: Focus trap for modal
+        document.addEventListener('keydown', function(e) {
+            const modal = document.getElementById('aiModal');
+            if (modal.classList.contains('active') && e.key === 'Tab') {
+                const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+                
+                if (e.shiftKey && document.activeElement === firstElement) {
+                    e.preventDefault();
+                    lastElement.focus();
+                } else if (!e.shiftKey && document.activeElement === lastElement) {
+                    e.preventDefault();
+                    firstElement.focus();
+                }
+            }
+        });
+
+        // Animate confidence bars on load
+        window.addEventListener('load', () => {
+            const fills = document.querySelectorAll('.confidence-fill');
+            fills.forEach(fill => {
+                const width = fill.style.width || '87%';
+                fill.style.width = '0';
+                setTimeout(() => {
+                    fill.style.width = width;
+                }, 500);
+            });
+        });
+
+        // Touch support for mobile
+        let touchStartX = 0;
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            const touchEndX = e.changedTouches[0].clientX;
+            const sidebar = document.querySelector('.sidebar');
+            
+            // Swipe right to open sidebar on mobile
+            if (window.innerWidth <= 768 && touchEndX - touchStartX > 50 && touchStartX < 50) {
+                sidebar.classList.add('mobile-open');
+            }
+            
+            // Swipe left to close sidebar
+            if (sidebar.classList.contains('mobile-open') && touchStartX - touchEndX > 50) {
+                sidebar.classList.remove('mobile-open');
+            }
+        });
+
+        // Responsive behavior
+        window.addEventListener('resize', function() {
+            const sidebar = document.querySelector('.sidebar');
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('mobile-open');
+            }
+        });
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const heartRate = document.querySelector('.vital-value');
+            if (heartRate) {
+                const currentValue = parseInt(heartRate.textContent);
+                const newValue = currentValue + (Math.random() > 0.5 ? 1 : -1);
+                heartRate.innerHTML = `${newValue} <span style="font-size: var(--font-size-base); color: var(--color-text-secondary);">bpm</span>
+                    <span class="vital-trend ${newValue > 80 ? 'trend-up' : newValue < 75 ? 'trend-down' : 'trend-stable'}" role="status">
+                        ${newValue > 80 ? '+' : ''}${Math.round(((newValue - 74) / 74) * 100)}%
+                    </span>`;
+            }
+        }, 10000); // Update every 10 seconds
+    </script>
+</body>
+</html>
